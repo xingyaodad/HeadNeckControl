@@ -10,6 +10,43 @@
 
 ---
 
+## 效果展示
+
+### 仿生头部运行演示
+
+<div align="center">
+
+ <!-- 替换为你的实际 GIF 文件 -->
+<img src="images/media/demo.gif" width="600" alt="仿生头部运行演示" />
+
+*仿生头部实时追踪演示*
+
+</div>
+
+### Windows 控制界面
+
+<div align="center">
+
+ <!-- 替换为你的实际截图 -->
+<img src="images/media/windows-ui.png" width="800" alt="Windows 控制界面" />
+
+*Windows 端手动控制界面*
+
+</div>
+
+### 硬件组装图
+
+<div align="center">
+
+ <!-- 替换为你的实际照片 -->
+<img src="images/media/hardware.jpg" width="600" alt="硬件组装图" />
+
+*硬件组装效果图*
+
+</div>
+
+---
+
 ## 项目简介
 
 HeadNeckControl 是一个完整的仿生颈部控制系统，通过树莓派和 PCA9685 驱动 8 个舵机来控制仿生头部的运动。系统支持多种控制方式：手机 ARKit 面部追踪、动画文件播放、Windows 端手动控制和测试模式，可以精确控制头部的俯仰、偏航和滚动三个自由度。
