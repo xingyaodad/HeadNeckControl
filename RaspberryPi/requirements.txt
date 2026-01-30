@@ -1,0 +1,4 @@
+numpy>=1.24.0
+adafruit-circuitpython-pca9685
+adafruit-circuitpython-servokit
+adafruit-circuitpython-motor

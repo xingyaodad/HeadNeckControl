@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <NoWarn>CS8622</NoWarn>
+  </PropertyGroup>
+
+   <ItemGroup>
+    <PackageReference Include="Numpy" Version="3.11.1.35" />
+    <PackageReference Include="NumSharp" Version="0.30.0" />
+  </ItemGroup>
+
+
+
+</Project>
