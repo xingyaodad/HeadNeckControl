@@ -76,6 +76,12 @@ HeadNeckControl 是一个完整的仿生颈部控制系统，通过树莓派和 
 - **iPhone/iPad**：支持 ARKit 4.0 或更高版本
 - **ARKit 应用**：可使用现成的 ARKit 面部追踪应用，或自行开发
 
+### 3D 打印设备（可选）
+- **3D 打印机**：FDM 打印机，打印尺寸至少 200×200×200mm
+- **打印材料**：PLA、PETG 或 ABS（推荐 PETG）
+- **切片软件**：Cura、PrusaSlicer 等
+- **模型文件**：`3D-Models/` 目录包含 OBJ、3MF 和 STL 格式的模型
+
 ## 快速开始
 
 ### 树莓派环境配置
@@ -434,22 +440,30 @@ HeadNeckControl/
 │   ├── anim_data/          # 动画文件目录
 │   └── requirements.txt    # Python 依赖
 │
-├── Windows/                # Windows 端代码（C#）
-│   └── NeckControlOutput/
-│       ├── Form1.cs            # 主窗体
-│       ├── Form1.Designer.cs   # 窗体设计器（自动生成）
-│       ├── Models.cs           # 数据模型
-│       ├── RBFHelper.cs        # RBF 插值助手
-│       ├── WeightMatrixHelper.cs # 权重矩阵计算
-│       ├── Program.cs          # 程序入口
-│       └── NeckControlOutput.csproj # 项目文件
-│
-├── AGENTS.md               # 开发者指南
-├── CONTRIBUTING.md         # 贡献指南
-├── LICENSE                # MIT 许可证
-├── README.md              # 本文件
-└── .gitignore            # Git 忽略规则
-```
+ ├── Windows/                # Windows 端代码（C#）
+ │   └── NeckControlOutput/
+ │       ├── Form1.cs            # 主窗体
+ │       ├── Form1.Designer.cs   # 窗体设计器（自动生成）
+ │       ├── Models.cs           # 数据模型
+ │       ├── RBFHelper.cs        # RBF 插值助手
+ │       ├── WeightMatrixHelper.cs # 权重矩阵计算
+ │       ├── Program.cs          # 程序入口
+ │       └── NeckControlOutput.csproj # 项目文件
+ │
+ ├── 3D-Models/              # 3D 打印模型文件
+ │   ├── OBJ/                 # Wavefront OBJ 格式模型
+ │   ├── 3MF/                 # 3D Manufacturing Format 格式模型
+ │   ├── STL/                 # STL 格式模型
+ │   └── README.md            # 3D 打印说明
+ │
+ ├── AGENTS.md               # 开发者指南
+ ├── CHECKLIST.md            # 项目检查清单
+ ├── CONTRIBUTING.md         # 贡献指南
+ ├── LICENSE                # MIT 许可证
+ ├── PACKAGING.md            # 打包发布指南
+ ├── README.md              # 本文件
+ └── .gitignore            # Git 忽略规则
+ ```
 
 ## 贡献
 

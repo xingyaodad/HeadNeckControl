@@ -52,6 +52,7 @@ dmypy.json
 
 # C# / .NET
 # Build results
+!3D-Models/
 [Dd]ebug/
 [Rr]elease/
 x64/
@@ -60,9 +61,17 @@ x86/
 [Aa][Mm][Dd]64/
 bld/
 [Bb]in/
-[Oo]bj/
 [Ll]og/
 [Ll]ogs/
+
+# Ignore obj directories in specific locations
+# Note: obj/ matches any directory named obj (including 3D-Models/OBJ/)
+# We add !3D-Models/**/ after obj/ to exclude it
+obj/
+!3D-Models/**/
+!3D-Models/**/*.obj
+!3D-Models/**/*.3mf
+!3D-Models/**/*.stl
 
 # Visual Studio cache/options directory
 .vs/
@@ -135,3 +144,8 @@ Thumbs.db
 *.tmp
 *.temp
 *~
+
+# 3D Models - Keep OBJ and 3MF files for 3D printing
+!3D-Models/**/*.obj
+!3D-Models/**/*.3mf
+!3D-Models/**/*.stl
