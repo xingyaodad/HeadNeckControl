@@ -100,6 +100,27 @@ namespace NeckControlOutput
                 neck_angles[i] = oneData?.NeckAngle ?? Array.Empty<float>();
             }
 
+            // 计算 neck_angles 中 x, y, z 的最大最小值
+            float x_min = float.MaxValue, x_max = float.MinValue;
+            float y_min = float.MaxValue, y_max = float.MinValue;
+            float z_min = float.MaxValue, z_max = float.MinValue;
+
+            for (int i = 0; i < neck_data_num; i++)
+            {
+                float[] angle = neck_angles[i];
+                if (angle.Length >= 3)
+                {
+                    x_min = Math.Min(x_min, angle[0]);
+                    x_max = Math.Max(x_max, angle[0]);
+                    y_min = Math.Min(y_min, angle[1]);
+                    y_max = Math.Max(y_max, angle[1]);
+                    z_min = Math.Min(z_min, angle[2]);
+                    z_max = Math.Max(z_max, angle[2]);
+                }
+            }
+
+            float[] neck_angle_minmax = new float[] { x_min, x_max, y_min, y_max, z_min, z_max };
+
             // 构建 NACK 矩阵配置
             int rows = weight_mat.shape[0];
             int cols = weight_mat.shape[1];
@@ -120,7 +141,8 @@ namespace NeckControlOutput
                 NeckAngles = neck_angles,
                 sigma = sigma,
                 Matrix = result,
-                MatrixSize = new int[] { rows, cols }
+                MatrixSize = new int[] { rows, cols },
+                NeckAngleMinMax = neck_angle_minmax
             };
 
             return nack_config;

@@ -5,6 +5,7 @@ from input.input_test import Test
 from controller.servo_controller import ServoController
 from controller.head_mapper import HeadMapper
 import time
+
 if not Config.DEBUG:
     import board
     import busio
@@ -15,10 +16,25 @@ i2c = None
 if not Config.DEBUG:
     i2c = busio.I2C(board.SCL, board.SDA)
 
-servo_ctrl = ServoController(i2c=i2c, address=Config.pca9685_address, servo_count=Config.servo_count)
+servo_ctrl = ServoController(
+    i2c=i2c, address=Config.pca9685_address, servo_count=Config.servo_count
+)
 servo_ctrl.start()
-head_mapper = HeadMapper(Config.neck_config_file)
+
+try:
+    head_mapper = HeadMapper(Config.neck_config_file)
+except ValueError as e:
+    print(f"错误: {e}")
+    print("请检查配置文件格式，或使用 Windows 端重新生成配置文件。")
+    servo_ctrl.stop()
+    sys.exit(1)
+except Exception as e:
+    print(f"加载配置文件时发生未知错误: {e}")
+    servo_ctrl.stop()
+    sys.exit(1)
+
 run_thread = None
+
 
 def run_anim():
     global run_thread
@@ -26,17 +42,24 @@ def run_anim():
     run_thread = AnimInput(Config.anim_file, controller=servo_ctrl, mapper=head_mapper)
     run_thread.start()
 
+
 def run_arkit():
     global run_thread
     Config.is_anim = False
-    run_thread = ArkitInput(Config.ip, Config.port, controller=servo_ctrl, mapper=head_mapper)
+    run_thread = ArkitInput(
+        Config.ip, Config.port, controller=servo_ctrl, mapper=head_mapper
+    )
     run_thread.start()
+
 
 def test():
     global run_thread
     Config.is_anim = True
-    run_thread = Test(Config.ip, Config.port, servo_ctrl, servo_count=Config.test_servo_count)
+    run_thread = Test(
+        Config.ip, Config.port, servo_ctrl, servo_count=Config.test_servo_count
+    )
     run_thread.start()
+
 
 def exit_out():
     if run_thread != None:
@@ -44,11 +67,12 @@ def exit_out():
     servo_ctrl.stop()
     exit()
 
+
 modes = {
     1: ("ARKit 实时捕捉", run_arkit),
     2: ("播放动画文件", run_anim),
     3: ("测试", test),
-    4: ("退出", exit_out)
+    4: ("退出", exit_out),
 }
 
 if __name__ == "__main__":

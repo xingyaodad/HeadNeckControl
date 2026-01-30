@@ -18,6 +18,7 @@ namespace NeckControlOutput
         public int[] MatrixSize { get; set; } = Array.Empty<int>();
         public float sigma { get; set; }
         public float[][] Matrix { get; set; } = Array.Empty<float[]>();
+        public float[] NeckAngleMinMax { get; set; } = Array.Empty<float>(); // [x_min, x_max, y_min, y_max, z_min, z_max]
     }
 
     public class OneData
