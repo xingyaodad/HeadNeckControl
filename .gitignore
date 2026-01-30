@@ -83,6 +83,9 @@ obj/
 .idea/
 *.sln.iml
 
+# Unity Rider .vsconfig
+.vsconfig
+
 # User-specific files
 *.rsuser
 *.suo
@@ -149,3 +152,37 @@ Thumbs.db
 !3D-Models/**/*.obj
 !3D-Models/**/*.3mf
 !3D-Models/**/*.stl
+
+# Unity (UnityArkit/)
+# This section applies to the UnityArkit/ directory
+
+# Unity generated files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+[Uu]serSettings/
+*.csproj
+*.csproj.meta
+*.sln.meta
+*.pidb
+*.suo
+*.user
+*.userprefs
+*.unity.profiles
+*.pidb.meta
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+.gradle/
+
+# Keep essential Unity project files
+!UnityArkit/Assets/
+!UnityArkit/ProjectSettings/ProjectVersion.txt
+!UnityArkit/Packages/manifest.json

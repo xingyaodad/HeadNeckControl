@@ -54,6 +54,7 @@ HeadNeckControl 是一个完整的仿生颈部控制系统，通过树莓派和 
 ## 功能特点
 
 - **ARKit 实时追踪**：通过 iOS 设备使用 ARKit 捕捉面部姿态，通过 UDP 直接发送到树莓派进行实时控制
+- **Unity iOS 应用**：提供完整的 Unity 项目，用于生成 ARKit 面部追踪 iOS 应用，支持自定义和扩展
 - **动画播放**：支持录制和播放预设的头部动作序列，动画文件存储在树莓派本地
 - **Windows 手动控制**：提供图形界面，可通过滑块直接控制舵机角度
 - **测试模式**：用于调试和校准舵机的测试模式
@@ -111,7 +112,10 @@ HeadNeckControl 是一个完整的仿生颈部控制系统，通过树莓派和 
 
 ### iOS 端（ARKit，可选）
 - **iPhone/iPad**：支持 ARKit 4.0 或更高版本
-- **ARKit 应用**：可使用现成的 ARKit 面部追踪应用，或自行开发
+- **Unity 2021.3 或更高版本**：用于构建 iOS 应用
+- **Xcode**：用于编译和部署 iOS 应用
+- **Apple Developer 账号**：用于真机部署（开发测试可用免费账号）
+- **Unity ARKit 项目**：项目包含 `UnityArkit/` 目录，包含完整的 ARKit 面部追踪应用源代码
 
 ### 3D 打印设备（可选）
 - **3D 打印机**：FDM 打印机，打印尺寸至少 200×200×200mm
@@ -259,6 +263,100 @@ python main.py
 3. 测试
 4. 退出
 ```
+
+### Unity iOS 应用配置
+
+#### 1. 系统要求
+- **操作系统**：macOS 10.15 或更高版本
+- **Unity 版本**：2021.3 LTS 或更高版本
+- **Xcode**：12.0 或更高版本
+- **iOS 设备**：iPhone/iPad（支持 ARKit 4.0 或更高版本）
+- **Apple Developer 账号**：用于真机部署
+
+#### 2. 安装 Unity 和依赖
+
+1. **安装 Unity Hub 和 Unity 编辑器**
+   - 从 [Unity 官网](https://unity.com/) 下载并安装 Unity Hub
+   - 安装 Unity 2021.3 LTS 或更高版本
+   - 在安装时选择 **iOS Build Support** 和 **ARKit** 模块
+
+2. **安装 Xcode**
+   ```bash
+   # 从 Mac App Store 安装 Xcode
+   # 或使用命令行工具
+   xcode-select --install
+   ```
+
+#### 3. 打开 Unity 项目
+
+```bash
+cd UnityArkit
+# 使用 Unity Hub 打开项目
+# 或者直接双击 UnityArkit.sln（如果配置了关联）
+```
+
+#### 4. 配置 ARKit 插件
+
+1. 在 Unity 编辑器中，打开 `Window > Package Manager`
+2. 确保 `AR Foundation` 和 `ARKit` 包已安装
+3. 如果未安装，点击 `+` 按钮选择 `Unity Registry`，搜索并安装
+
+#### 5. 配置网络连接
+
+修改网络相关脚本，确保指向正确的树莓派 IP 地址和端口：
+
+```csharp
+// 在网络脚本中配置
+private string raspberryPiIp = "192.168.3.11";
+private int raspberryPiPort = 9003;
+```
+
+#### 6. 构建并部署 iOS 应用
+
+1. **切换平台到 iOS**
+   - 打开 `File > Build Settings`
+   - 选择 `iOS` 平台
+   - 点击 `Switch Platform`
+
+2. **配置构建设置**
+   - 在 `Build Settings` 中配置：
+     - **Bundle Identifier**：如 `com.yourcompany.HeadNeckControl`
+     - **Minimum iOS Version**：12.0（ARKit 要求）
+     - **Architecture**：ARM64
+
+3. **构建 Xcode 项目**
+   - 点击 `Build` 按钮
+   - 选择输出文件夹，如 `Build/iOS`
+   - 等待构建完成
+
+4. **在 Xcode 中编译并部署**
+   ```bash
+   cd Build/iOS
+   open Unity-iPhone.xcodeproj
+   ```
+   - 在 Xcode 中，选择你的开发团队
+   - 选择目标设备（真机或模拟器）
+   - 点击 `Run` 按钮或按 `Cmd+R`
+
+5. **真机部署要求**
+   - 确保设备已通过 USB 连接到 Mac
+   - 在设备设置中启用"开发者模式"
+   - 信任开发者的证书
+
+#### 7. 使用 ARKit 应用
+
+1. **启动应用**
+   - 在 iOS 设备上打开应用
+   - 授权相机和 ARKit 权限
+
+2. **连接到树莓派**
+   - 确保 iOS 设备和树莓派在同一局域网
+   - 应用会自动发送面部姿态数据到树莓派
+
+3. **测试追踪**
+   - 将设备对准脸部
+   - 应用会实时捕捉面部表情和头部姿态
+   - 树莓派端的舵机会根据头部运动实时响应
 
 ### Windows 端配置
 
@@ -460,23 +558,23 @@ sudo lsof -i:9003
 
 ```
 HeadNeckControl/
-├── RaspberryPi/              # 树莓派端代码（Python）
-│   ├── main.py             # 主程序入口
-│   ├── config.py           # 配置文件
-│   ├── controller/         # 控制器模块
-│   │   ├── servo_controller.py   # 舵机控制器
-│   │   └── head_mapper.py       # 头部姿态映射器
-│   ├── input/              # 输入源模块
-│   │   ├── base_input.py        # 输入源基类
-│   │   ├── input_arkit.py       # ARKit 输入源
-│   │   ├── input_anim.py        # 动画文件输入源
-│   │   ├── input_ai.py          # AI 输入源
-│   │   └── input_test.py       # 测试输入源
-│   ├── utils/              # 工具模块
-│   │   └── filetools.py        # 文件处理工具
-│   ├── anim_data/          # 动画文件目录
-│   └── requirements.txt    # Python 依赖
-│
+ ├── RaspberryPi/              # 树莓派端代码（Python）
+ │   ├── main.py             # 主程序入口
+ │   ├── config.py           # 配置文件
+ │   ├── controller/         # 控制器模块
+ │   │   ├── servo_controller.py   # 舵机控制器
+ │   │   └── head_mapper.py       # 头部姿态映射器
+ │   ├── input/              # 输入源模块
+ │   │   ├── base_input.py        # 输入源基类
+ │   │   ├── input_arkit.py       # ARKit 输入源
+ │   │   ├── input_anim.py        # 动画文件输入源
+ │   │   ├── input_ai.py          # AI 输入源
+ │   │   └── input_test.py       # 测试输入源
+ │   ├── utils/              # 工具模块
+ │   │   └── filetools.py        # 文件处理工具
+ │   ├── anim_data/          # 动画文件目录
+ │   └── requirements.txt    # Python 依赖
+ │
  ├── Windows/                # Windows 端代码（C#）
  │   └── NeckControlOutput/
  │       ├── Form1.cs            # 主窗体
@@ -486,6 +584,15 @@ HeadNeckControl/
  │       ├── WeightMatrixHelper.cs # 权重矩阵计算
  │       ├── Program.cs          # 程序入口
  │       └── NeckControlOutput.csproj # 项目文件
+ │
+ ├── UnityArkit/              # Unity iOS ARKit 应用
+ │   ├── Assets/             # Unity 资源和脚本
+ │   │   ├── Scenes/          # 场景文件
+ │   │   ├── Scripts/         # C# 脚本
+ │   │   └── Samples/         # AR Foundation 示例
+ │   ├── Packages/           # Unity 包配置
+ │   ├── ProjectSettings/     # 项目设置
+ │   └── UnityArkit.sln     # 解决方案文件
  │
  ├── 3D-Models/              # 3D 打印模型文件
  │   ├── OBJ/                 # Wavefront OBJ 格式模型

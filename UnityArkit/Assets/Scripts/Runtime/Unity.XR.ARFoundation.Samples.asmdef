@@ -1,0 +1,45 @@
+{
+    "name": "Unity.XR.ARFoundation.Samples",
+    "rootNamespace": "UnityEngine.XR.ARFoundation.Samples",
+    "references": [
+        "Unity.XR.ARFoundation",
+        "Unity.InputSystem",
+        "Unity.XR.ARSubsystems",
+        "Unity.XR.CoreUtils",
+        "Unity.TextMeshPro",
+        "Unity.XR.Interaction.Toolkit",
+        "Unity.XR.Management",
+        "Unity.XR.ARKit",
+        "Unity.XR.ARKit.FaceTracking",
+        "Unity.XR.ARCore",
+        "Unity.VisualScripting.Core",
+        "Unity.VisualScripting.Flow",
+        "Unity.XR.MetaOpenXR",
+        "Unity.XR.OpenXR"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.visualscripting",
+            "expression": "1.8",
+            "define": "VISUALSCRIPTING_1_8_OR_NEWER"
+        },
+        {
+            "name": "com.unity.xr.meta-openxr",
+            "expression": "0.2.0",
+            "define": "METAOPENXR_0_2_OR_NEWER"
+        },
+        {
+            "name": "com.unity.xr.arcore",
+            "expression": "4.2.0",
+            "define": "ARCORE_4_2_OR_NEWER"
+        }
+    ],
+    "noEngineReferences": false
+}
