@@ -10,7 +10,7 @@ class ImportUI:
         if cmds.window('OutAnimWin', exists=True):
             cmds.deleteUI('OutAnimWin')
 
-        self.win = cmds.window('OutAnimWin', title='导出动画数据', widthHeight=(320, 570), sizeable=False)
+        self.win = cmds.window('OutAnimWin', title='导出动画数据', widthHeight=(320, 300), sizeable=False)
         main_layout = cmds.columnLayout(adjustableColumn=True, columnAttach=('both', 10))
 
         cmds.separator(height=10, style='in', parent=main_layout)

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**基于树莓派的仿生颈部舵机控制系统**
+**基于RBF的仿生颈部舵机控制系统**
 
 通过 8 个舵机实现仿生头部的实时控制和动画播放
 
@@ -12,36 +12,14 @@
 
 ## 效果展示
 
-### 仿生头部运行演示
+### 仿生脖子运行演示
 
 <div align="center">
 
  <!-- 替换为你的实际 GIF 文件 -->
-<img src="images/media/demo.gif" width="600" alt="仿生头部运行演示" />
+<img src="images/media/demo.gif" width="600" alt="仿生脖子运行演示" />
 
-*仿生头部实时追踪演示*
-
-</div>
-
-### Windows 控制界面
-
-<div align="center">
-
- <!-- 替换为你的实际截图 -->
-<img src="images/media/windows-ui.png" width="800" alt="Windows 控制界面" />
-
-*Windows 端手动控制界面*
-
-</div>
-
-### 硬件组装图
-
-<div align="center">
-
- <!-- 替换为你的实际照片 -->
-<img src="images/media/hardware.jpg" width="600" alt="硬件组装图" />
-
-*硬件组装效果图*
+*仿生脖子实时追踪演示*
 
 </div>
 
@@ -55,11 +33,10 @@ HeadNeckControl 是一个完整的仿生颈部控制系统，通过树莓派和 
 
 - **ARKit 实时追踪**：通过 iOS 设备使用 ARKit 捕捉面部姿态，通过 UDP 直接发送到树莓派进行实时控制
 - **Unity iOS 应用**：提供完整的 Unity 项目，用于生成 ARKit 面部追踪 iOS 应用，支持自定义和扩展
-- **动画播放**：支持录制和播放预设的头部动作序列，动画文件存储在树莓派本地
+- **动画播放**：支持播放预设的头部动作序列，动画文件存储在树莓派本地
 - **Windows 手动控制**：提供图形界面，可通过滑块直接控制舵机角度
 - **测试模式**：用于调试和校准舵机的测试模式
 - **平滑过渡**：使用 RBF（径向基函数）插值算法，实现流畅的动作过渡
-- **调试模式**：无需硬件即可在电脑上模拟运行，便于开发调试
 - **多输入源**：支持多种输入源的灵活切换
 
 ## 系统架构
@@ -92,7 +69,7 @@ HeadNeckControl 是一个完整的仿生颈部控制系统，通过树莓派和 
 
 **数据流向说明**：
 - **Windows 端**：通过滑块手动控制舵机角度，通过 UDP 发送舵机角度数据到树莓派
-- **iOS ARKit 端**：直接通过 UDP 发送 ARKit 捕捉的面部姿态数据（blendshapes + rotation）到树莓派
+- **iOS ARKit 端**：直接通过 UDP 发送 ARKit 捕捉的面部姿态数据到树莓派
 - **动画播放**：动画文件（`.anim`）存储在树莓派本地，由树莓派读取并播放
 - **树莓派**：作为控制中心，接收所有输入源数据，经过 HeadMapper 映射后控制舵机
 
@@ -118,10 +95,10 @@ HeadNeckControl 是一个完整的仿生颈部控制系统，通过树莓派和 
 - **Unity ARKit 项目**：项目包含 `UnityArkit/` 目录，包含完整的 ARKit 面部追踪应用源代码
 
 ### 3D 打印设备（可选）
-- **3D 打印机**：FDM 打印机，打印尺寸至少 200×200×200mm
+- **3D 打印机**：FDM 打印机，打印尺寸至少 256×256×256mm
 - **打印材料**：PLA、PETG 或 ABS（推荐 PETG）
-- **切片软件**：Cura、PrusaSlicer 等
-- **模型文件**：`3D-Models/` 目录包含 OBJ、3MF 和 STL 格式的模型
+- **切片软件**：Bambu Studio
+- **模型文件**：`3D-Models/` 目录包含 OBJ模型文件、3MF切片文件
 
 ## 快速开始
 
@@ -197,7 +174,7 @@ i2cdetect -y 1
 
 如果看到 `40`，说明 PCA9685 已正确连接。
 
-#### 6. 配置网络
+#### 6. 配置
 
 编辑 `config.py`：
 
@@ -206,9 +183,8 @@ class Config():
     DEBUG = False        # 生产环境设为 False
     ip = ''            # 树莓派的 IP 地址（自动获取）
     port = 9003        # UDP 接收端口
-    bs_count = 52       # ARKit blendshapes 数量
     servo_count = 8     # 舵机数量
-    test_servo_count = 8
+    test_servo_count = 8 #测试用的与上面保持一致就行
     pca9685_address = [0x40]  # PCA9685 I2C 地址
     pca_frequency = 50          # PWM 频率 (50Hz)
     is_anim = False      # 是否在播放动画
@@ -223,23 +199,11 @@ hostname -I
 
 #### 7. 配置文件
 
-项目包含两个重要的配置文件：
 
 **树莓派配置文件**：
 - 文件位置：`RaspberryPi/controller/neck_matrix_config.json`
 - 用途：RBF 插值矩阵和舵机角度映射
-- 说明：首次下载时已包含默认配置，可直接使用
-- 示例文件：`neck_matrix_config.example.json`（参考用）
-
-**Windows 配置文件**：
-- 文件位置：`Windows/NeckControlOutput/neck_config.json`（运行时生成）
-- 用途：舵机角度、标签、网络设置
-- 说明：首次运行程序时会自动创建
-- 示例文件：`neck_config.example.json`（参考用）
-
-**注意**：如果配置文件被意外删除或损坏：
-1. 树莓派端：复制 `.example.json` 文件并重命名为 `neck_matrix_config.json`
-2. Windows 端：程序会自动创建默认配置，或复制 `neck_config.example.json`
+- 说明：需要在PC端手动生成
 
 #### 8. 测试运行
 
@@ -273,76 +237,6 @@ python main.py
 - **iOS 设备**：iPhone/iPad（支持 ARKit 4.0 或更高版本）
 - **Apple Developer 账号**：用于真机部署
 
-#### 2. 安装 Unity 和依赖
-
-1. **安装 Unity Hub 和 Unity 编辑器**
-   - 从 [Unity 官网](https://unity.com/) 下载并安装 Unity Hub
-   - 安装 Unity 2021.3 LTS 或更高版本
-   - 在安装时选择 **iOS Build Support** 和 **ARKit** 模块
-
-2. **安装 Xcode**
-   ```bash
-   # 从 Mac App Store 安装 Xcode
-   # 或使用命令行工具
-   xcode-select --install
-   ```
-
-#### 3. 打开 Unity 项目
-
-```bash
-cd UnityArkit
-# 使用 Unity Hub 打开项目
-# 或者直接双击 UnityArkit.sln（如果配置了关联）
-```
-
-#### 4. 配置 ARKit 插件
-
-1. 在 Unity 编辑器中，打开 `Window > Package Manager`
-2. 确保 `AR Foundation` 和 `ARKit` 包已安装
-3. 如果未安装，点击 `+` 按钮选择 `Unity Registry`，搜索并安装
-
-#### 5. 配置网络连接
-
-修改网络相关脚本，确保指向正确的树莓派 IP 地址和端口：
-
-```csharp
-// 在网络脚本中配置
-private string raspberryPiIp = "192.168.3.11";
-private int raspberryPiPort = 9003;
-```
-
-#### 6. 构建并部署 iOS 应用
-
-1. **切换平台到 iOS**
-   - 打开 `File > Build Settings`
-   - 选择 `iOS` 平台
-   - 点击 `Switch Platform`
-
-2. **配置构建设置**
-   - 在 `Build Settings` 中配置：
-     - **Bundle Identifier**：如 `com.yourcompany.HeadNeckControl`
-     - **Minimum iOS Version**：12.0（ARKit 要求）
-     - **Architecture**：ARM64
-
-3. **构建 Xcode 项目**
-   - 点击 `Build` 按钮
-   - 选择输出文件夹，如 `Build/iOS`
-   - 等待构建完成
-
-4. **在 Xcode 中编译并部署**
-   ```bash
-   cd Build/iOS
-   open Unity-iPhone.xcodeproj
-   ```
-   - 在 Xcode 中，选择你的开发团队
-   - 选择目标设备（真机或模拟器）
-   - 点击 `Run` 按钮或按 `Cmd+R`
-
-5. **真机部署要求**
-   - 确保设备已通过 USB 连接到 Mac
-   - 在设备设置中启用"开发者模式"
-   - 信任开发者的证书
-
 #### 7. 使用 ARKit 应用
 
 1. **启动应用**
@@ -351,199 +245,13 @@ private int raspberryPiPort = 9003;
 
 2. **连接到树莓派**
    - 确保 iOS 设备和树莓派在同一局域网
-   - 应用会自动发送面部姿态数据到树莓派
+   - 点击按钮发送面部姿态数据到树莓派
 
 3. **测试追踪**
    - 将设备对准脸部
    - 应用会实时捕捉面部表情和头部姿态
    - 树莓派端的舵机会根据头部运动实时响应
 
-### Windows 端配置
-
-#### 1. 安装 .NET 8 SDK
-
-下载并安装 [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-
-#### 2. 打开解决方案
-
-```bash
-cd Windows
-dotnet build
-dotnet run
-```
-
-#### 3. 配置连接
-
-- 在界面中设置树莓派的 IP 地址和端口
-- 加载或创建 `neck_config.json` 配置文件
-- 使用滑块控制舵机角度
-
-### 动画文件使用
-
-#### 1. 录制动画
-
-使用程序录制模式将动作保存到 `.anim` 文件。
-
-#### 2. 放置动画文件
-
-将动画文件放到树莓派的 `anim_data/` 目录：
-
-```bash
-mkdir -p anim_data
-cp your_animation.anim anim_data/
-```
-
-#### 3. 播放动画
-
-运行树莓派程序，选择"播放动画文件"模式，程序会自动播放 `anim_data/neck.anim`。
-
-## 配置文件说明
-
-### `neck_matrix_config.json`（树莓派）
-
-用于 RBF 插值的核心配置文件：
-
-```json
-{
-  "ServoMinMax": {
-    "servo1": [0, 180],   // 舵机最小/最大角度
-    "servo2": [180, 15],
-    ...
-  },
-  "NeckAngles": [
-    [0, 0, 0],           // 中立位置（x, y, z）
-    [30, 0, 0],          // 低头 30 度
-    [-20, 0, 0],         // 抬头 20 度
-    [0, 30, 0],          // 左转 30 度
-    [0, -30, 0],         // 右转 30 度
-    ...
-  ],
-  "MatrixSize": [8, 8],   // 矩阵尺寸
-  "sigma": 30.670156,     // RBF 核函数宽度
-  "Matrix": [...]         // RBF 插值矩阵（8x8）
-}
-```
-
-### `neck_config.json`（Windows）
-
-存储舵机角度映射和标签的配置文件：
-
-```json
-{
-  "ServoMinMax": {
-    "servo_0": [0, 180],
-    ...
-  },
-  "NeckData": {
-    "0_0_0": {
-      "NeckAngle": [0.0, 0.0, 0.0],    // 颈部姿态角度
-      "ServoAngle": [90, 90, ...]      // 对应的舵机角度
-    }
-  },
-  "ServoLabels": {
-    "servo_0": ["紧", "松"],
-    ...
-  },
-  "ServerIp": "192.168.3.11",    // 树莓派 IP
-  "ServerPort": 9003              // UDP 端口
-}
-```
-
-## 调试技巧
-
-### 1. 启用调试模式
-
-设置 `Config.DEBUG = True`，无需硬件即可运行：
-
-```python
-class Config():
-    DEBUG = True  # 调试模式（打印舵机命令，不执行硬件操作）
-```
-
-在调试模式下，舵机控制命令会打印到控制台：
-```
-[0, 90]
-[1, 95]
-...
-```
-
-### 2. 网络调试
-
-**检查 UDP 端口是否正常监听**：
-```bash
-sudo netstat -ulnp | grep 9003
-```
-
-**测试 UDP 连接**（从 Windows 发送测试数据）：
-```bash
-# 使用 netcat 或 PowerShell 发送测试数据
-echo "test data" | nc -u 192.168.3.11 9003
-```
-
-**使用 Wireshark 抓包**：
-- 安装 Wireshark
-- 设置过滤器：`udp.port == 9003`
-- 查看 UDP 数据包内容
-
-### 3. 舵机调试
-
-**测试单个舵机**：
-```python
-# 在测试模式下测试单个舵机
-# 选择"测试"模式，输入舵机编号和角度
-```
-
-**检查 PCA9685 PWM 输出**：
-```bash
-# 使用示波器或逻辑分析仪测量 PCA9685 的 PWM 输出
-# 正常的 PWM 频率应为 50Hz，脉宽范围 500-2500μs
-```
-
-### 4. 性能优化
-
-- **调整 PWM 频率**：默认 50Hz，某些舵机可能需要 60Hz
-- **调整 RBF sigma 参数**：影响插值平滑度
-- **优化线程优先级**：确保控制线程有足够 CPU 时间
-
-## 常见问题
-
-### 树莓派相关问题
-
-**Q: PCA9685 检测不到？**
-```bash
-# 检查 I2C 是否启用
-raspi-config nonint get_i2c
-
-# 检查接线（SDA -> GPIO 2, SCL -> GPIO 3）
-# 检查电源电压（PCA9685 需要 3.3V-5V）
-```
-
-**Q: 舵机抖动？**
-- 检查电源是否充足（5V 3A+）
-- 调整 PCA9685 PWM 频率到 60Hz
-- 增加 PCA9685 旁路电容（100μF）
-
-**Q: UDP 数据接收不到？**
-```bash
-# 检查防火墙
-sudo ufw status
-sudo ufw allow 9003/udp
-
-# 检查端口监听
-sudo lsof -i:9003
-```
-
-### Windows 端相关问题
-
-**Q: 无法连接到树莓派？**
-- 检查 IP 地址是否正确
-- 确认两台设备在同一局域网
-- 测试网络连通性：`ping 192.168.3.11`
-
-**Q: 配置文件加载失败？**
-- 检查 JSON 文件格式是否正确
-- 确认文件编码为 UTF-8
-- 检查文件路径是否正确
 
 ## 开发指南
 
