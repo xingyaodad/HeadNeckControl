@@ -17,7 +17,7 @@
 <div align="center">
 
  <!-- 替换为你的实际 GIF 文件 -->
-<img src="images/media/demo.gif" width="600" alt="仿生脖子运行演示" />
+<img src="images/media/test.gif" width="600" alt="仿生脖子运行演示" />
 
 *仿生脖子实时追踪演示*
 
