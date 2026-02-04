@@ -21,31 +21,38 @@ servo_ctrl = ServoController(
 )
 servo_ctrl.start()
 
-try:
-    head_mapper = HeadMapper(Config.neck_config_file)
-except ValueError as e:
-    print(f"错误: {e}")
-    print("请检查配置文件格式，或使用 Windows 端重新生成配置文件。")
-    servo_ctrl.stop()
-    sys.exit(1)
-except Exception as e:
-    print(f"加载配置文件时发生未知错误: {e}")
-    servo_ctrl.stop()
-    sys.exit(1)
-
 run_thread = None
+head_mapper = None
 
 
 def run_anim():
-    global run_thread
+    global run_thread, head_mapper
     Config.is_anim = True
+    try:
+        head_mapper = HeadMapper(Config.neck_config_file)
+    except ValueError as e:
+        print(f"错误: {e}")
+        print("请检查配置文件格式，或使用 Windows 端重新生成配置文件。")
+        return
+    except Exception as e:
+        print(f"加载配置文件时发生未知错误: {e}")
+        return
     run_thread = AnimInput(Config.anim_file, controller=servo_ctrl, mapper=head_mapper)
     run_thread.start()
 
 
 def run_arkit():
-    global run_thread
+    global run_thread, head_mapper
     Config.is_anim = False
+    try:
+        head_mapper = HeadMapper(Config.neck_config_file)
+    except ValueError as e:
+        print(f"错误: {e}")
+        print("请检查配置文件格式，或使用 Windows 端重新生成配置文件。")
+        return
+    except Exception as e:
+        print(f"加载配置文件时发生未知错误: {e}")
+        return
     run_thread = ArkitInput(
         Config.ip, Config.port, controller=servo_ctrl, mapper=head_mapper
     )
