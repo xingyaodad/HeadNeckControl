@@ -145,15 +145,42 @@ namespace NeckControlOutput
             comboBox1.SelectedValueChanged += ComboBoxChange;
             comboBox2.SelectedValueChanged += ComboBoxChange;
 
-
-
-            string currentDir = AppDomain.CurrentDomain.BaseDirectory;
-            string[] jsonFiles = Directory.GetFiles(currentDir, "*.json");
-
-            // 查找目标文件在当前目录下的路径
+            // 自动查找并加载 neck_config.json 文件（与 Form1.cs 同目录）
+            string? targetFile = null;
             string targetFileName = "neck_config.json";
 
-            string? targetFile = jsonFiles.FirstOrDefault(file => Path.GetFileName(file).Equals(targetFileName, StringComparison.OrdinalIgnoreCase));
+            // 获取 exe 所在目录
+            string exeDir = AppDomain.CurrentDomain.BaseDirectory;
+
+            // 优先查找：与 Form1.cs 同目录（项目目录 NeckControlOutput/）
+            // 从 exe 目录向上两级：bin/Debug/net8.0-windows -> bin/Debug -> NeckControlOutput
+            string projectDir = Path.GetFullPath(Path.Combine(exeDir, "..", ".."));
+            string projectConfigPath = Path.Combine(projectDir, targetFileName);
+            if (File.Exists(projectConfigPath))
+            {
+                targetFile = projectConfigPath;
+            }
+
+            // 后备：exe 目录本身
+            if (targetFile == null)
+            {
+                string exeConfigPath = Path.Combine(exeDir, targetFileName);
+                if (File.Exists(exeConfigPath))
+                {
+                    targetFile = exeConfigPath;
+                }
+            }
+
+            // 再后备：Windows 目录（向上三级）
+            if (targetFile == null)
+            {
+                string windowsDir = Path.GetFullPath(Path.Combine(exeDir, "..", "..", ".."));
+                string windowsConfigPath = Path.Combine(windowsDir, targetFileName);
+                if (File.Exists(windowsConfigPath))
+                {
+                    targetFile = windowsConfigPath;
+                }
+            }
 
             if (targetFile != null)
             {
