@@ -1,0 +1,40 @@
+{
+  "ServoMinMax": {
+    "servo_0": [
+      0,
+      180
+    ],
+    "servo_1": [
+      0,
+      180
+    ],
+    "servo_2": [
+      0,
+      180
+    ],
+    "servo_3": [
+      0,
+      180
+    ],
+    "servo_4": [
+      0,
+      180
+    ],
+    "servo_5": [
+      0,
+      180
+    ],
+    "servo_6": [
+      0,
+      180
+    ],
+    "servo_7": [
+      0,
+      180
+    ]
+  },
+  "NeckData": {},
+  "ServoLabels": {},
+  "ServerIp": "192.168.3.11",
+  "ServerPort": 9003
+}

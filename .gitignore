@@ -130,6 +130,7 @@ Windows/NeckControlOutput/*/neck_config.json
 # Other config files - ignore unless they are examples
 *config.json
 !*config.example.json
+!Windows/NeckControlOutput/neck_config.json
 
 # Logs
 *.log
