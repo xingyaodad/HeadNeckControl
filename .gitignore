@@ -120,16 +120,16 @@ nul
 *.pyc
 
 # Config files - keep essential configs, ignore user-specific ones
-# Essential configs that must be committed:
-!RaspberryPi/controller/neck_matrix_config.json
-!RaspberryPi/config.py
-
 # Ignore user-specific configs but keep the initial default
 Windows/NeckControlOutput/*/neck_config.json
 
 # Other config files - ignore unless they are examples
 *config.json
 !*config.example.json
+
+# Essential configs that must be committed:
+!RaspberryPi/controller/neck_matrix_config.json
+!RaspberryPi/config.py
 !Windows/NeckControlOutput/neck_config.json
 
 # Logs
